@@ -1,6 +1,7 @@
 import React from 'react';
 import { CameraStats } from '../components/CameraStats';
 import { Activity, ArrowUp, Users, Clock } from 'lucide-react';
+import { ApiTest } from '../components/ApiTest';
 
 const activityData = [
   { time: '2 minutes ago', event: 'Motion detected in Parking Lot' },
@@ -12,6 +13,7 @@ const activityData = [
 export function Dashboard() {
   return (
     <div className="space-y-6">
+      <ApiTest />
       <CameraStats />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

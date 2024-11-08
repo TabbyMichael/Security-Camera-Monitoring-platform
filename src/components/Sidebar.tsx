@@ -118,7 +118,7 @@ export function Sidebar() {
                   <Settings className="w-4 h-4" />
                   <span>Settings</span>
                 </button>
-                <button className="w-full flex items<boltAction type="file" filePath="src/components/Sidebar.tsx">                <button className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-gray-700 hover:text-red-300">
+                <button className="text-gray-600 hover:text-gray-800">
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
                 </button>
