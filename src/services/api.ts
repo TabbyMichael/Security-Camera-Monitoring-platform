@@ -111,4 +111,21 @@ export const api = {
     });
     return response.json();
   },
+
+  async requestPasswordReset(email: string) {
+    try {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Password Reset Request Error:', error);
+      throw error;
+    }
+  },
 }; 
