@@ -27,5 +27,88 @@ export const api = {
       console.error('Login Error:', error);
       throw error;
     }
-  }
+  },
+
+  // Camera endpoints
+  async getCameras() {
+    const response = await fetch(`${API_URL}/cameras`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.json();
+  },
+
+  async addCamera(cameraData: {
+    name: string;
+    url: string;
+    username?: string;
+    password?: string;
+  }) {
+    const response = await fetch(`${API_URL}/cameras`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(cameraData),
+    });
+    return response.json();
+  },
+
+  // Recording endpoints
+  async getRecordings() {
+    const response = await fetch(`${API_URL}/recordings`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.json();
+  },
+
+  async getCameraRecordings(cameraId: string) {
+    const response = await fetch(`${API_URL}/recordings/camera/${cameraId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.json();
+  },
+
+  // Alert endpoints
+  async getAlerts() {
+    const response = await fetch(`${API_URL}/alerts`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.json();
+  },
+
+  async createAlert(alertData: {
+    type: string;
+    camera: string;
+    severity: string;
+    message: string;
+  }) {
+    const response = await fetch(`${API_URL}/alerts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(alertData),
+    });
+    return response.json();
+  },
+
+  async resolveAlert(alertId: string) {
+    const response = await fetch(`${API_URL}/alerts/${alertId}/resolve`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.json();
+  },
 }; 
