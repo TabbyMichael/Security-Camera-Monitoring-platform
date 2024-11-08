@@ -1,8 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-interface AuthRequest extends Request {
-  user?: jwt.JwtPayload | string;
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+  };
+}
+
+interface JwtPayload {
+  id: string;
 }
 
 export const protect = async (
@@ -20,13 +26,16 @@ export const protect = async (
       token = req.headers.authorization.split(' ')[1];
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
-      // Get user from token
-      req.user = decoded;
+      // Set user in request
+      req.user = {
+        id: decoded.id
+      };
 
       next();
-    } catch {
+    } catch (error) {
+      console.error('Auth middleware error:', error);
       res.status(401).json({ message: 'Not authorized' });
     }
   }

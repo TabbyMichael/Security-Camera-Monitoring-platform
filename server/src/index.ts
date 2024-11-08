@@ -6,6 +6,10 @@ import authRoutes from './routes/auth';
 import cameraRoutes from './routes/cameras';
 import recordingRoutes from './routes/recordings';
 import alertRoutes from './routes/alerts';
+import { limiter } from './middleware/rateLimiter';
+import { errorHandler } from './middleware/errorHandler';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
 
 dotenv.config();
 
@@ -15,6 +19,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(limiter);
+app.use(helmet());
+app.use(mongoSanitize());
 
 // Test route
 app.get('/api/test', (req, res) => {
@@ -26,6 +33,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cameras', cameraRoutes);
 app.use('/api/recordings', recordingRoutes);
 app.use('/api/alerts', alertRoutes);
+
+// Add after all routes
+app.use(errorHandler);
 
 // Database connection
 connectDB();
