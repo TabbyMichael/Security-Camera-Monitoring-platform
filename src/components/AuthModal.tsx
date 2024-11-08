@@ -13,6 +13,11 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   if (!isOpen) return null;
 
+  const handleForgotPassword = () => {
+    onClose();
+    navigate('/forgot-password');
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-3xl p-8 relative">
@@ -85,7 +90,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </div>
 
           {!isSignUp && (
-            <button className="w-full text-center text-blue-600 hover:text-blue-800 text-lg">
+            <button 
+              onClick={handleForgotPassword}
+              className="w-full text-center text-blue-600 hover:text-blue-800 text-lg"
+            >
               Forgot your password?
             </button>
           )}

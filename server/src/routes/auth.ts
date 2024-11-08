@@ -66,4 +66,31 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Forgot password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.json({ 
+        message: 'If an account exists with this email, you will receive password reset instructions.' 
+      });
+    }
+
+    // TODO: Generate password reset token and send email
+    // This is where you would:
+    // 1. Generate a reset token
+    // 2. Save it to the user document with an expiration
+    // 3. Send an email with the reset link
+
+    res.json({ 
+      message: 'If an account exists with this email, you will receive password reset instructions.' 
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router; 

@@ -6,6 +6,7 @@ import { Recordings } from './screens/Recordings';
 import { Alerts } from './screens/Alerts';
 import { Settings } from './screens/Settings';
 import { NotificationCenter } from './screens/NotificationCenter';
+import { ForgotPassword } from './screens/ForgotPassword';
 
 export function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export function AppRoutes() {
       <Route path="/alerts" element={<Alerts />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/notifications" element={<NotificationCenter />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }
