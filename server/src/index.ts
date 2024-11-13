@@ -10,6 +10,7 @@ import { limiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
+import streamingRoutes from './streaming/server';
 
 dotenv.config();
 
@@ -17,7 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://webcams.windy.com'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(limiter);
 app.use(helmet());
@@ -33,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cameras', cameraRoutes);
 app.use('/api/recordings', recordingRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api', streamingRoutes);
 
 // Add after all routes
 app.use(errorHandler);
