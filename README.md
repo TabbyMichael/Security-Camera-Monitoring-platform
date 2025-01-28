@@ -1,12 +1,12 @@
 # Security Camera Monitoring Platform 🎥
 
-[<img src="placeholder_hero_image.png" alt="Security Camera Platform Hero Image" width="100%">]
+[<img src="public/assets/1.png" alt="Security Camera Platform Hero Image" width="100%">]
 
 A modern, robust security camera monitoring solution that provides real-time surveillance, motion detection, and smart alerts. Built with React, Node.js, and MongoDB.
 
 ## ✨ Features
 
-[<img src="placeholder_features.png" alt="Platform Features" width="100%">]
+[<img src="public/assets/2.png" alt="Platform Features" width="100%">]
 
 - 🖥️ **Live Camera Feeds** - Monitor multiple camera streams in real-time
 - 🎯 **Motion Detection** - Smart detection with instant notifications
@@ -52,7 +52,7 @@ npm start
 
 ## 💻 Usage
 
-[<img src="placeholder_dashboard.png" alt="Dashboard Screenshot" width="100%">]
+[<img src="public/assets/3.png" alt="Dashboard Screenshot" width="100%">]
 
 1. **Dashboard Overview**
    - Monitor all camera feeds in a grid layout
@@ -72,7 +72,7 @@ npm start
 ## 🛠️ Configuration
 ### Camera Setup
 
-[<img src="placeholder_camera_setup.png" alt="Camera Setup Guide" width="100%">]
+[<img src="public/assets/4.png" alt="Camera Setup Guide" width="100%">]
 
 Configure your cameras in the `server/src/config/cameras.ts` file:
 
@@ -93,7 +93,7 @@ export const cameraConfig = {
 
 ## 📱 Mobile Support
 
-[<img src="placeholder_mobile.png" alt="Mobile App Screenshot" width="50%">]
+[<img src="public/assets/5.png" alt="Mobile App Screenshot" width="100%">]
 
 - Responsive design works on all devices
 - Mobile-optimized video streaming
