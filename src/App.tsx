@@ -23,11 +23,14 @@ function MainContent() {
   );
 }
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <Router>
       <SidebarProvider>
         <MainContent />
+        <Toaster position="top-right" />
       </SidebarProvider>
     </Router>
   );

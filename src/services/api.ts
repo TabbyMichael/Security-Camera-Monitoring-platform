@@ -1,6 +1,15 @@
 const API_URL = 'http://localhost:5000/api';
 
 export const api = {
+  authHeader() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      return { Authorization: `Bearer ${token}` };
+    } else {
+      return {};
+    }
+  },
+
   async test() {
     try {
       const response = await fetch(`${API_URL}/test`);
@@ -29,12 +38,27 @@ export const api = {
     }
   },
 
+  async register(name: string, email: string, password: string) {
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Register Error:', error);
+      throw error;
+    }
+  },
+
   // Camera endpoints
   async getCameras() {
     const response = await fetch(`${API_URL}/cameras`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: this.authHeader(),
     });
     return response.json();
   },
@@ -46,10 +70,10 @@ export const api = {
     password?: string;
   }) {
     const response = await fetch(`${API_URL}/cameras`, {
-      method: 'POST', 
+      method: 'POST',
       headers: {
+        ...this.authHeader(),
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(cameraData),
     });
@@ -73,18 +97,14 @@ export const api = {
   // Recording endpoints
   async getRecordings() {
     const response = await fetch(`${API_URL}/recordings`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: this.authHeader(),
     });
     return response.json();
   },
 
   async getCameraRecordings(cameraId: string) {
     const response = await fetch(`${API_URL}/recordings/camera/${cameraId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: this.authHeader(),
     });
     return response.json();
   },
@@ -92,9 +112,7 @@ export const api = {
   // Alert endpoints
   async getAlerts() {
     const response = await fetch(`${API_URL}/alerts`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: this.authHeader(),
     });
     return response.json();
   },
@@ -108,8 +126,8 @@ export const api = {
     const response = await fetch(`${API_URL}/alerts`, {
       method: 'POST',
       headers: {
+        ...this.authHeader(),
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(alertData),
     });
@@ -119,9 +137,7 @@ export const api = {
   async resolveAlert(alertId: string) {
     const response = await fetch(`${API_URL}/alerts/${alertId}/resolve`, {
       method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: this.authHeader(),
     });
     return response.json();
   },
