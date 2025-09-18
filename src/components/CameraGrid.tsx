@@ -98,6 +98,7 @@ export function CameraGrid() {
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                data-testid={`camera-feed-${camera.id}`}
               />
             </div>
             <div className="p-3 bg-white">
