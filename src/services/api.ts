@@ -80,20 +80,6 @@ export const api = {
     return response.json();
   },
 
-  async getCameraFeeds() {
-    try {
-      const response = await fetch(`${API_URL}/camera-feeds`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Get Camera Feeds Error:', error);
-      throw error;
-    }
-  },
-
   // Recording endpoints
   async getRecordings() {
     const response = await fetch(`${API_URL}/recordings`, {
@@ -155,6 +141,26 @@ export const api = {
       return data;
     } catch (error) {
       console.error('Password Reset Request Error:', error);
+      throw error;
+    }
+  },
+
+  async resetPassword(token: string, password: string) {
+    try {
+      const response = await fetch(`${API_URL}/auth/reset-password/${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to reset password');
+      }
+      return data;
+    } catch (error) {
+      console.error('Password Reset Error:', error);
       throw error;
     }
   },

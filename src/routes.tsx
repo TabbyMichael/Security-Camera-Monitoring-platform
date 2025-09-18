@@ -7,7 +7,9 @@ import { Alerts } from './screens/Alerts';
 import { Settings } from './screens/Settings';
 import { NotificationCenter } from './screens/NotificationCenter';
 import { ForgotPassword } from './screens/ForgotPassword';
+import { ResetPassword } from './screens/ResetPassword';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ManageCameras } from './screens/ManageCameras';
 
 export function AppRoutes() {
   return (
@@ -22,6 +24,7 @@ export function AppRoutes() {
         <Route path="/notifications" element={<NotificationCenter />} />
       </Route>
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
   );
 }

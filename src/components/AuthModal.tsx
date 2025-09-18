@@ -145,7 +145,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           )}
 
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+            <div data-testid="error-message" className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
               {error}
             </div>
           )}

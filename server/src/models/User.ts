@@ -7,6 +7,8 @@ interface IUser extends Document {
   password: string;
   role: 'admin' | 'user';
   matchPassword(enteredPassword: string): Promise<boolean>;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
 }
 
 const userSchema = new mongoose.Schema({

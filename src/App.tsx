@@ -3,6 +3,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { AppRoutes } from './routes';
 import { SidebarProvider, useSidebar } from './context/SidebarContext';
+import { Toaster } from 'react-hot-toast';
 
 // Create a wrapper component to use the hook
 function MainContent() {
@@ -22,8 +23,6 @@ function MainContent() {
     </div>
   );
 }
-
-import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (

@@ -1,65 +1,26 @@
+import React, { useState, useEffect } from 'react';
 import { CameraStats } from '../components/CameraStats';
 import { Activity, ArrowUp, Users, Clock, Camera, Bell, Shield, ChevronRight, PlayCircle, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { ApiTest } from '../components/ApiTest';
+import { api } from '../services/api';
+import { formatDistanceToNow } from 'date-fns';
 
-const activityData = [
-  { 
-    time: '2 minutes ago', 
-    event: 'Motion detected in Parking Lot',
-    type: 'motion',
-    camera: 'Parking Lot',
-    priority: 'high'
-  },
-  { 
-    time: '15 minutes ago', 
-    event: 'New user badge access at Main Entrance',
-    type: 'access',
-    camera: 'Main Entrance',
-    priority: 'medium'
-  },
-  { 
-    time: '1 hour ago', 
-    event: 'System update completed successfully',
-    type: 'system',
-    camera: null,
-    priority: 'low'
-  },
-  { 
-    time: '2 hours ago', 
-    event: 'Backup completed successfully',
-    type: 'system',
-    camera: null,
-    priority: 'low'
-  },
-];
+interface Alert {
+  _id: string;
+  type: string;
+  camera: { name: string };
+  message: string;
+  severity: string;
+  createdAt: string;
+}
 
-const recentRecordings = [
-  {
-    id: 1,
-    camera: 'Main Entrance',
-    timestamp: '2 hours ago',
-    duration: '1:30',
-    size: '250MB',
-    thumbnail: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&q=80'
-  },
-  {
-    id: 2,
-    camera: 'Parking Lot',
-    timestamp: '3 hours ago',
-    duration: '2:15',
-    size: '320MB',
-    thumbnail: 'https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?auto=format&fit=crop&q=80'
-  },
-  {
-    id: 3,
-    camera: 'Storage Area',
-    timestamp: '4 hours ago',
-    duration: '1:45',
-    size: '280MB',
-    thumbnail: 'https://images.unsplash.com/photo-1590496793929-36417d3117de?auto=format&fit=crop&q=80'
-  }
-];
+interface Recording {
+  _id: string;
+  camera: { name: string };
+  startTime: string;
+  duration: number;
+  fileUrl: string;
+}
 
 const systemHealth = {
   uptime: '99.9%',
@@ -74,6 +35,28 @@ const systemHealth = {
 
 export function Dashboard() {
   const navigate = useNavigate();
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [recordings, setRecordings] = useState<Recording[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [alertsData, recordingsData] = await Promise.all([
+          api.getAlerts(),
+          api.getRecordings(),
+        ]);
+        setAlerts(alertsData.slice(0, 4)); // Get latest 4 alerts
+        setRecordings(recordingsData.slice(0, 3)); // Get latest 3 recordings
+      } catch (error) {
+        console.error("Failed to fetch dashboard data", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleViewAll = (section: 'activity' | 'recordings') => {
     switch (section) {
@@ -111,7 +94,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      <ApiTest />
       <CameraStats />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -130,33 +112,31 @@ export function Dashboard() {
             </button>
           </div>
           <div className="space-y-4">
-            {activityData.map((item, index) => (
-              <div key={index} className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
+            {isLoading ? <p>Loading activity...</p> : alerts.map((item) => (
+              <div key={item._id} className="flex items-start gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
                 <div className={`p-2 rounded-lg ${
-                  item.type === 'motion' ? 'bg-red-100' :
-                  item.type === 'access' ? 'bg-green-100' : 'bg-blue-100'
+                  item.type === 'motion' ? 'bg-red-100' : 'bg-blue-100'
                 }`}>
                   {item.type === 'motion' ? <Camera className="w-5 h-5 text-red-500" /> :
-                   item.type === 'access' ? <Users className="w-5 h-5 text-green-500" /> :
                    <Shield className="w-5 h-5 text-blue-500" />}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-gray-800 font-medium">{item.event}</p>
+                      <p className="text-gray-800 font-medium">{item.message}</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm text-gray-500">{item.time}</span>
+                        <span className="text-sm text-gray-500">{formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}</span>
                         {item.camera && (
-                          <span className="text-sm text-gray-500">• {item.camera}</span>
+                          <span className="text-sm text-gray-500">• {item.camera.name}</span>
                         )}
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      item.priority === 'high' ? 'bg-red-100 text-red-700' :
-                      item.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                      item.severity === 'high' || item.severity === 'critical' ? 'bg-red-100 text-red-700' :
+                      item.severity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
                       'bg-green-100 text-green-700'
                     }`}>
-                      {item.priority.toUpperCase()}
+                      {item.severity.toUpperCase()}
                     </span>
                   </div>
                 </div>
@@ -184,49 +164,14 @@ export function Dashboard() {
                 />
               </div>
             </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-600">CPU Usage</span>
-                <span className="text-gray-900 font-medium">{systemHealth.cpuUsage}%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-500 h-2 rounded-full" 
-                  style={{ width: `${systemHealth.cpuUsage}%` }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-600">Memory Usage</span>
-                <span className="text-gray-900 font-medium">{systemHealth.memoryUsage}%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-purple-500 h-2 rounded-full" 
-                  style={{ width: `${systemHealth.memoryUsage}%` }}
-                />
-              </div>
-            </div>
-
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="p-4 bg-gray-50 rounded-lg">
                 <div className="text-sm text-gray-600">Uptime</div>
                 <div className="text-lg font-semibold mt-1">{systemHealth.uptime}</div>
               </div>
               <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">Bandwidth</div>
-                <div className="text-lg font-semibold mt-1">{systemHealth.bandwidth}</div>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
                 <div className="text-sm text-gray-600">Active Users</div>
                 <div className="text-lg font-semibold mt-1">{systemHealth.activeUsers}</div>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">Last Backup</div>
-                <div className="text-lg font-semibold mt-1">{systemHealth.lastBackup}</div>
               </div>
             </div>
           </div>
@@ -248,28 +193,19 @@ export function Dashboard() {
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentRecordings.map((recording) => (
-            <div key={recording.id} className="group relative">
-              <div className="aspect-video rounded-lg overflow-hidden">
-                <img 
-                  src={recording.thumbnail} 
-                  alt={recording.camera}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                />
+          {isLoading ? <p>Loading recordings...</p> : recordings.map((recording) => (
+            <div key={recording._id} className="group relative">
+              <div className="aspect-video rounded-lg overflow-hidden bg-gray-200">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-medium">{recording.camera}</h3>
+                  <h3 className="text-white font-medium">{recording.camera.name}</h3>
                   <div className="flex items-center gap-2 text-white/80 text-sm mt-1">
                     <Clock className="w-4 h-4" />
-                    {recording.timestamp}
-                    <span>•</span>
-                    {recording.duration}
+                    {formatDistanceToNow(new Date(recording.startTime), { addSuffix: true })}
                   </div>
                 </div>
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100">
-                    <Download className="w-4 h-4 text-gray-700" />
-                  </button>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <PlayCircle className="w-12 h-12 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
             </div>
