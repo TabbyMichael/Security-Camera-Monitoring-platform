@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
   Camera,
   Shield,
   Database,
@@ -105,22 +105,6 @@ export function Settings() {
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Camera className="w-5 h-5" />
-              Manage Cameras
-            </h2>
-            <div className="space-y-4">
-              <Link
-                to="/settings/cameras"
-                className="block p-4 border rounded-lg hover:bg-gray-50 text-center"
-              >
-                <h3 className="text-lg font-semibold">Go to Camera Management</h3>
-                <p className="text-gray-600">Add, edit, or remove your camera feeds.</p>
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <Video className="w-5 h-5" />
               Recording Settings
             </h2>
@@ -184,7 +168,7 @@ export function Settings() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">IP Whitelist</label>
-                <textarea 
+                <textarea
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Enter IP addresses (one per line)"
                   rows={3}

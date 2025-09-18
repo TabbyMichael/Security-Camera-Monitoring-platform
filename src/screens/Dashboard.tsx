@@ -4,29 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import { ApiTest } from '../components/ApiTest';
 
 const activityData = [
-  { 
-    time: '2 minutes ago', 
+  {
+    time: '2 minutes ago',
     event: 'Motion detected in Parking Lot',
     type: 'motion',
     camera: 'Parking Lot',
     priority: 'high'
   },
-  { 
-    time: '15 minutes ago', 
+  {
+    time: '15 minutes ago',
     event: 'New user badge access at Main Entrance',
     type: 'access',
     camera: 'Main Entrance',
     priority: 'medium'
   },
-  { 
-    time: '1 hour ago', 
+  {
+    time: '1 hour ago',
     event: 'System update completed successfully',
     type: 'system',
     camera: null,
     priority: 'low'
   },
-  { 
-    time: '2 hours ago', 
+  {
+    time: '2 hours ago',
     event: 'Backup completed successfully',
     type: 'system',
     camera: null,
@@ -191,8 +191,8 @@ export function Dashboard() {
                 <span className="text-gray-900 font-medium">{systemHealth.cpuUsage}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-500 h-2 rounded-full" 
+                <div
+                  className="bg-green-500 h-2 rounded-full"
                   style={{ width: `${systemHealth.cpuUsage}%` }}
                 />
               </div>
@@ -204,8 +204,8 @@ export function Dashboard() {
                 <span className="text-gray-900 font-medium">{systemHealth.memoryUsage}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-purple-500 h-2 rounded-full" 
+                <div
+                  className="bg-purple-500 h-2 rounded-full"
                   style={{ width: `${systemHealth.memoryUsage}%` }}
                 />
               </div>
@@ -251,8 +251,8 @@ export function Dashboard() {
           {recentRecordings.map((recording) => (
             <div key={recording.id} className="group relative">
               <div className="aspect-video rounded-lg overflow-hidden">
-                <img 
-                  src={recording.thumbnail} 
+                <img
+                  src={recording.thumbnail}
                   alt={recording.camera}
                   className="w-full h-full object-cover transition-transform group-hover:scale-105"
                 />

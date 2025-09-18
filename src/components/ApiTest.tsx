@@ -24,12 +24,12 @@ export function ApiTest() {
     <div className="p-4 rounded-lg border">
       <h2 className="text-lg font-semibold mb-2">API Connection Status</h2>
       <div className={`
-        flex items-center gap-2 
+        flex items-center gap-2
         ${status === 'loading' && 'text-yellow-600'}
         ${status === 'success' && 'text-green-600'}
         ${status === 'error' && 'text-red-600'}
       `}>
-        <div className={`w-3 h-3 rounded-full 
+        <div className={`w-3 h-3 rounded-full
           ${status === 'loading' && 'bg-yellow-600 animate-pulse'}
           ${status === 'success' && 'bg-green-600'}
           ${status === 'error' && 'bg-red-600'}
@@ -38,4 +38,4 @@ export function ApiTest() {
       </div>
     </div>
   );
-} 
+}

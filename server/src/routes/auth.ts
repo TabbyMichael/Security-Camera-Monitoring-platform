@@ -73,8 +73,8 @@ router.post('/forgot-password', async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.json({ 
-        message: 'If an account exists with this email, you will receive password reset instructions.' 
+      return res.json({
+        message: 'If an account exists with this email, you will receive password reset instructions.'
       });
     }
 
@@ -85,7 +85,7 @@ router.post('/forgot-password', async (req, res) => {
     // 3. Send an email with the reset link
 
     res.json({ 
-      message: 'If an account exists with this email, you will receive password reset instructions.' 
+      message: 'If an account exists with this email, you will receive password reset instructions.'
     });
   } catch (error) {
     console.error('Forgot password error:', error);

@@ -1,26 +1,56 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { api } from '../services/api';
+import React from 'react';
 import { Calendar as CalendarIcon, Download, Filter, Play, X, ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { format, startOfToday, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, parse, parseISO } from 'date-fns';
+import { format, startOfToday, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, parse } from 'date-fns';
 
-interface Recording {
-  _id: string;
-  camera: {
-    _id: string;
-    name: string;
-  };
-  startTime: string;
-  duration: number;
-  fileUrl: string;
+type Recording = {
+  id: number;
+  camera: string;
+  date: string;
+  time: string;
+  duration: string;
+  size: string;
   type: 'motion' | 'scheduled' | 'manual';
-  size: number;
-}
+  status: 'available' | 'processing' | 'archived';
+};
+
+const recordings: Recording[] = [
+  {
+    id: 1,
+    camera: 'Main Entrance',
+    date: '2024-03-15',
+    time: '14:30:00',
+    duration: '01:30:00',
+    size: '250MB',
+    type: 'motion',
+    status: 'available'
+  },
+  {
+    id: 2,
+    camera: 'Parking Lot',
+    date: '2024-03-15',
+    time: '13:15:00',
+    duration: '02:00:00',
+    size: '350MB',
+    type: 'scheduled',
+    status: 'available'
+  },
+  {
+    id: 3,
+    camera: 'Storage Area',
+    date: '2024-03-15',
+    time: '11:45:00',
+    duration: '01:15:00',
+    size: '180MB',
+    type: 'manual',
+    status: 'archived'
+  },
+];
+
+const cameras = ['All Cameras', 'Main Entrance', 'Parking Lot', 'Storage Area', 'Side Gate', 'Reception'];
+const recordingTypes = ['All Types', 'Motion', 'Scheduled', 'Manual'];
+const statusTypes = ['All Status', 'Available', 'Processing', 'Archived'];
 
 export function Recordings() {
-  const [recordings, setRecordings] = useState<Recording[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [selectedDate, setSelectedDate] = React.useState(startOfToday());
   const [currentMonth, setCurrentMonth] = React.useState(format(startOfToday(), 'MMM-yyyy'));
   const [showCalendar, setShowCalendar] = React.useState(false);
@@ -28,30 +58,9 @@ export function Recordings() {
   const [filters, setFilters] = React.useState({
     camera: 'All Cameras',
     type: 'All Types',
+    status: 'All Status',
     search: '',
   });
-
-  useEffect(() => {
-    const fetchRecordings = async () => {
-      setIsLoading(true);
-      try {
-        const data = await api.getRecordings();
-        setRecordings(data);
-      } catch (err) {
-        setError('Failed to fetch recordings.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchRecordings();
-  }, []);
-
-  const cameras = useMemo(() => {
-    const cameraNames = recordings.map(r => r.camera.name);
-    return ['All Cameras', ...Array.from(new Set(cameraNames))];
-  }, [recordings]);
-
-  const recordingTypes = ['All Types', 'Motion', 'Scheduled', 'Manual'];
 
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const days = eachDayOfInterval({
@@ -69,35 +78,17 @@ export function Recordings() {
     setCurrentMonth(format(new Date(firstDayNextMonth.setMonth(firstDayNextMonth.getMonth() + 1)), 'MMM-yyyy'));
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  const filteredRecordings = recordings.filter(recording => {
+    const matchesCamera = filters.camera === 'All Cameras' || recording.camera === filters.camera;
+    const matchesType = filters.type === 'All Types' || recording.type === filters.type.toLowerCase();
+    const matchesStatus = filters.status === 'All Status' || recording.status === filters.status.toLowerCase();
+    const matchesSearch = filters.search === '' ||
+      recording.camera.toLowerCase().includes(filters.search.toLowerCase()) ||
+      recording.date.includes(filters.search) ||
+      recording.time.includes(filters.search);
 
-  const formatDuration = (seconds: number) => {
-    const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-    return `${h}:${m}:${s}`;
-  };
-
-  const filteredRecordings = useMemo(() => {
-    return recordings.filter(recording => {
-      const matchesDate = isSameDay(parseISO(recording.startTime), selectedDate);
-      const matchesCamera = filters.camera === 'All Cameras' || recording.camera.name === filters.camera;
-      const matchesType = filters.type === 'All Types' || recording.type === filters.type.toLowerCase();
-      const matchesSearch = filters.search === '' ||
-        recording.camera.name.toLowerCase().includes(filters.search.toLowerCase());
-
-      return matchesDate && matchesCamera && matchesType && matchesSearch;
-    });
-  }, [recordings, selectedDate, filters]);
-
-  if (isLoading) return <p>Loading recordings...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+    return matchesCamera && matchesType && matchesStatus && matchesSearch;
+  });
 
   return (
     <div className="space-y-6">
@@ -178,14 +169,14 @@ export function Recordings() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Search by Camera
+                      Search
                     </label>
                     <div className="relative">
                       <input
                         type="text"
                         value={filters.search}
                         onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                        placeholder="Search cameras..."
+                        placeholder="Search recordings..."
                         className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                       <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
@@ -221,6 +212,21 @@ export function Recordings() {
                       ))}
                     </select>
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Status
+                    </label>
+                    <select
+                      value={filters.status}
+                      onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      {statusTypes.map(status => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             )}
@@ -248,6 +254,9 @@ export function Recordings() {
                 Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Size
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -257,11 +266,11 @@ export function Recordings() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredRecordings.map((recording) => (
-              <tr key={recording._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{recording.camera.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{format(parseISO(recording.startTime), 'MMM dd, yyyy')}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{format(parseISO(recording.startTime), 'HH:mm:ss')}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDuration(recording.duration)}</td>
+              <tr key={recording.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">{recording.camera}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{recording.date}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{recording.time}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{recording.duration}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium
                     ${recording.type === 'motion' ? 'bg-yellow-100 text-yellow-800' : ''}
@@ -271,14 +280,23 @@ export function Recordings() {
                     {recording.type.charAt(0).toUpperCase() + recording.type.slice(1)}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatFileSize(recording.size)}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium
+                    ${recording.status === 'available' ? 'bg-green-100 text-green-800' : ''}
+                    ${recording.status === 'processing' ? 'bg-yellow-100 text-yellow-800' : ''}
+                    ${recording.status === 'archived' ? 'bg-gray-100 text-gray-800' : ''}
+                  `}>
+                    {recording.status.charAt(0).toUpperCase() + recording.status.slice(1)}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{recording.size}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
-                  <a href={recording.fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 mx-2">
+                  <button className="text-blue-600 hover:text-blue-800 mx-2">
                     <Play className="w-5 h-5" />
-                  </a>
-                  <a href={recording.fileUrl} download className="text-gray-600 hover:text-gray-800">
+                  </button>
+                  <button className="text-gray-600 hover:text-gray-800">
                     <Download className="w-5 h-5" />
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}
