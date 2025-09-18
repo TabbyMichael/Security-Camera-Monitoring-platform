@@ -14,10 +14,7 @@ router.use(cors());
 
 router.get('/camera-feeds', async (req: Request, res: Response) => {
   try {
-    const WINDY_API_KEY = process.env.WINDY_API_KEY;
-    if (!WINDY_API_KEY) {
-      throw new Error('Windy API key not found in environment variables');
-    }
+    const WINDY_API_KEY = 'za7us71w9pVyGzS9Ilt4jkSDBHY1PPmv';
     
     console.log('Attempting to fetch camera feeds from Windy API V3...');
     

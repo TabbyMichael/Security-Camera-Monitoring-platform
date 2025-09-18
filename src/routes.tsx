@@ -8,7 +8,7 @@ import { Settings } from './screens/Settings';
 import { NotificationCenter } from './screens/NotificationCenter';
 import { ForgotPassword } from './screens/ForgotPassword';
 import { ResetPassword } from './screens/ResetPassword';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import { ManageCameras } from './screens/ManageCameras';
 
 export function AppRoutes() {
