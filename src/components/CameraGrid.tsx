@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Grid2x2, Grid3x3, Maximize2, Volume2, VolumeX, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
+import { api } from '../services/api';
 
 interface Camera {
   id: number;
@@ -22,12 +22,12 @@ export function CameraGrid() {
   useEffect(() => {
     const fetchCameras = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/camera-feeds');
-        if (response.data.success) {
-          setCameras(response.data.data);
+        const response = await api.getCameraFeeds();
+        if (response.success) {
+          setCameras(response.data);
           setError(null);
         } else {
-          setError('Failed to fetch cameras');
+          setError(response.error || 'Failed to fetch cameras');
         }
       } catch (err) {
         setError('An error occurred while fetching camera feeds');
