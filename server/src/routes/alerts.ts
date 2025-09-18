@@ -9,9 +9,44 @@ const router = express.Router();
 // Get all alerts
 router.get('/', protect, async (req: AuthRequest, res) => {
   try {
-    const alerts = await Alert.find({})
+    let alerts = await Alert.find({})
       .populate('camera', 'name location')
       .sort({ createdAt: -1 });
+
+    if (alerts.length === 0) {
+      // If no alerts, return mock data for UI development
+      alerts = [
+        {
+          _id: 'mockAlert1',
+          type: 'motion',
+          camera: { name: 'Main Entrance' },
+          severity: 'high',
+          message: 'Motion detected at the main entrance.',
+          resolved: false,
+          createdAt: new Date('2025-09-18T12:00:00Z'),
+        },
+        {
+          _id: 'mockAlert2',
+          type: 'offline',
+          camera: { name: 'Parking Lot' },
+          severity: 'critical',
+          message: 'Parking Lot camera has gone offline.',
+          resolved: false,
+          createdAt: new Date('2025-09-18T09:30:00Z'),
+        },
+        {
+          _id: 'mockAlert3',
+          type: 'tampering',
+          camera: { name: 'Side Gate' },
+          severity: 'medium',
+          message: 'Camera at Side Gate may have been tampered with.',
+          resolved: true,
+          resolvedAt: new Date('2025-09-18T08:00:00Z'),
+          createdAt: new Date('2025-09-18T07:45:00Z'),
+        },
+      ] as any;
+    }
+
     res.json(alerts);
   } catch (err) {
     console.error(err);
