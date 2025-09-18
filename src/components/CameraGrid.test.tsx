@@ -8,20 +8,14 @@ vi.mock('../services/api');
 
 const mockCameras = [
   {
-    id: 1,
+    _id: '1',
     name: 'Test Camera 1',
     url: 'http://example.com/stream1',
-    location: 'Test Location 1',
-    status: 'online',
-    recording: true,
   },
   {
-    id: 2,
+    _id: '2',
     name: 'Test Camera 2',
     url: 'http://example.com/stream2',
-    location: 'Test Location 2',
-    status: 'online',
-    recording: false,
   },
 ];
 
@@ -32,10 +26,7 @@ describe('CameraGrid', () => {
 
   it('should render camera feeds when the api call is successful', async () => {
     // Mock the successful api response
-    vi.mocked(api.getCameraFeeds).mockResolvedValue({
-      success: true,
-      data: mockCameras,
-    });
+    vi.mocked(api.getCameras).mockResolvedValue(mockCameras);
 
     render(<CameraGrid />);
 
@@ -54,31 +45,15 @@ describe('CameraGrid', () => {
 
   it('should render an error message when the api call fails', async () => {
     // Mock the failed api response
-    vi.mocked(api.getCameraFeeds).mockRejectedValue(new Error('API Error'));
+    vi.mocked(api.getCameras).mockRejectedValue(new Error('API Error'));
 
     render(<CameraGrid />);
 
     // Wait for the error message to be displayed
     await waitFor(() => {
       expect(
-        screen.getByText('An error occurred while fetching camera feeds')
+        screen.getByText('An error occurred while fetching your cameras')
       ).toBeInTheDocument();
-    });
-  });
-
-  it('should display a specific error message from the API on failure', async () => {
-    const errorMessage = 'Failed to fetch cameras from external API';
-    // Mock the failed api response with a specific error message
-    vi.mocked(api.getCameraFeeds).mockResolvedValue({
-      success: false,
-      error: errorMessage,
-    });
-
-    render(<CameraGrid />);
-
-    // Wait for the error message to be displayed
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
   });
 });

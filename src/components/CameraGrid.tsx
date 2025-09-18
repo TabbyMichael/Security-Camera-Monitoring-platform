@@ -3,34 +3,26 @@ import { Camera, Grid2x2, Grid3x3, Maximize2, Volume2, VolumeX, AlertTriangle } 
 import { api } from '../services/api';
 
 interface Camera {
-  id: number;
+  _id: string;
   name: string;
   url: string;
-  location: string;
-  status: string;
-  recording: boolean;
-  lastUpdated?: string;
 }
 
 export function CameraGrid() {
   const [layout, setLayout] = React.useState<'2x2' | '3x3'>('2x2');
-  const [maximizedCamera, setMaximizedCamera] = React.useState<number | null>(null);
-  const [mutedCameras, setMutedCameras] = React.useState<Set<number>>(new Set());
+  const [maximizedCamera, setMaximizedCamera] = React.useState<string | null>(null);
+  const [mutedCameras, setMutedCameras] = React.useState<Set<string>>(new Set());
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCameras = async () => {
       try {
-        const response = await api.getCameraFeeds();
-        if (response.success) {
-          setCameras(response.data);
-          setError(null);
-        } else {
-          setError(response.error || 'Failed to fetch cameras');
-        }
+        const userCameras = await api.getCameras();
+        setCameras(userCameras);
+        setError(null);
       } catch (err) {
-        setError('An error occurred while fetching camera feeds');
+        setError('An error occurred while fetching your cameras');
         console.error('Error fetching cameras:', err);
       }
     };
@@ -38,7 +30,7 @@ export function CameraGrid() {
     fetchCameras();
   }, []);
 
-  const handleMute = (cameraId: number) => {
+  const handleMute = (cameraId: string) => {
     setMutedCameras(prev => {
       const newSet = new Set(prev);
       if (newSet.has(cameraId)) {
@@ -89,7 +81,7 @@ export function CameraGrid() {
       <div className={gridClassName}>
         {cameras.map((camera) => (
           <div 
-            key={camera.id}
+            key={camera._id}
             className="relative bg-white rounded-lg shadow-md overflow-hidden"
           >
             <div className="aspect-video w-full">
@@ -98,27 +90,26 @@ export function CameraGrid() {
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                data-testid={`camera-feed-${camera.id}`}
+                data-testid={`camera-feed-${camera._id}`}
               />
             </div>
             <div className="p-3 bg-white">
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="font-semibold">{camera.name}</h3>
-                  <p className="text-sm text-gray-500">{camera.location}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setMaximizedCamera(maximizedCamera === camera.id ? null : camera.id)}
+                    onClick={() => setMaximizedCamera(maximizedCamera === camera._id ? null : camera._id)}
                     className="p-2 rounded-lg text-gray-600 hover:text-blue-500"
                   >
                     <Maximize2 className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => handleMute(camera.id)}
+                    onClick={() => handleMute(camera._id)}
                     className="p-2 rounded-lg text-gray-600 hover:text-blue-500"
                   >
-                    {mutedCameras.has(camera.id) ? (
+                    {mutedCameras.has(camera._id) ? (
                       <VolumeX className="w-5 h-5" />
                     ) : (
                       <Volume2 className="w-5 h-5" />
