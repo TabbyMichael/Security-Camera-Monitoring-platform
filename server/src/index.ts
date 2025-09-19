@@ -42,9 +42,9 @@ app.use('/api', streamingRoutes);
 // Add after all routes
 app.use(errorHandler);
 
-// Database connection
-connectDB();
+// Conditionally connect to DB, but not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-}); 
+export default app;
