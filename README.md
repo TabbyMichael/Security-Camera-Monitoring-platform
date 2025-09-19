@@ -1,41 +1,36 @@
-# TradeTrack - The Ultimate Trading Journal & Community Hub 📈
+# GuardianEye - Modern Security Camera Monitoring Platform 🎥
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 📖 **Project Overview**
 
-TradeTrack is a powerful, open-source trading journal designed to help you track, analyze, and optimize your trading performance. But it's more than just a journal; it's a vibrant community hub where traders can connect, share insights, and learn from each other. With AI-powered analytics and a suite of modern community features, TradeTrack is the ultimate tool for serious traders who want to level up their game.
+GuardianEye is a comprehensive, open-source security camera monitoring platform built with the MERN stack (MongoDB, Express, React, Node.js) and TypeScript. It provides a modern, responsive interface for real-time surveillance, camera management, and alert handling. Whether you're monitoring a home, office, or public space, GuardianEye offers the tools you need to stay secure.
 
 ---
 
 🚀 **Features**
 
-**Core Journaling Features:**
-*   **Comprehensive Trade Logging:** Record every detail of your trades, including entry/exit points, position sizes, strategies, and personal notes.
-*   **Advanced Analytics:** Visualize your performance with in-depth charts and metrics. Track your P/L, win rate, risk/reward ratio, and more.
-*   **Customizable Dashboards:** Tailor your dashboard to see the data that matters most to you.
-
-**Community Forum & Social Features:**
-*   **Interactive Community Forum:** A dedicated space to discuss strategies, share trade ideas, and ask questions. The forum is seamlessly integrated with the journaling system, allowing you to link directly to your trade logs for context.
-*   **Real-Time Notifications:** Get instant alerts for replies, mentions, and other important community activities.
-*   **Reactions & Gamification:** Engage with posts using reactions, and climb the leaderboards by contributing valuable content.
-*   **AI-Assisted Trade Summaries:** Automatically generate concise, AI-powered summaries of your trades to share with the community for feedback.
-*   **Leaderboards:** See how you stack up against other traders in the community based on verified performance metrics.
+*   **Real-Time Live View:** Monitor multiple camera feeds in real-time with a customizable grid layout.
+*   **Dashboard Analytics:** Get a quick overview of your security system with key stats and recent activity on the main dashboard.
+*   **Event-Based Recordings:** Automatically record and store video clips triggered by motion or other alerts.
+*   **Alerts & Notifications:** Receive and manage alerts for important events, ensuring you never miss a critical moment.
+*   **User Authentication:** Secure access to the platform with a robust authentication system.
+*   **Responsive Design:** Access and manage your cameras from any device, thanks to a clean and responsive UI built with Tailwind CSS.
+*   **(Placeholder) Public Feeds:** The original README mentioned viewing public camera feeds from Windy.com API. This feature can be re-integrated or developed.
 
 ---
 
 🛠 **Tech Stack**
 
-This project is built with a modern, robust, and scalable tech stack:
-
 *   **Frontend:** React, Vite, TypeScript, Tailwind CSS
 *   **Backend:** Node.js, Express, MongoDB (with Mongoose)
-*   **Authentication:** Firebase, JSON Web Tokens (JWT)
-*   **Real-Time Communication:** (To be implemented - e.g., Socket.IO)
+*   **Authentication:** Firebase (for phone auth), JSON Web Tokens (JWT)
 
 ---
 
 ⚙️ **Installation & Setup**
 
-Get a local copy of TradeTrack up and running for development and testing.
+Get a local copy of GuardianEye up and running for development.
 
 ### Prerequisites
 
@@ -47,45 +42,45 @@ Get a local copy of TradeTrack up and running for development and testing.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/tradetrack.git
-    cd tradetrack
+    git clone https://github.com/yourusername/guardianeye.git
+    cd guardianeye
     ```
 
 2.  **Configure Backend Environment Variables:**
-    In the `server/` directory, create a `.env` file and add your MongoDB connection string and a JWT secret:
+    In the `server/` directory, create a `.env` file. You will need to add your MongoDB connection string and a secret for signing JWTs.
     ```bash
     # server/.env
     MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret
+    JWT_SECRET=your_super_secret_key
     ```
 
 3.  **Configure Frontend Environment Variables:**
-    In the root directory, create a `.env` file to specify the backend API URL:
+    In the root project directory, create a `.env` file to tell the frontend where to find the backend API.
     ```bash
     # .env
     VITE_API_URL=http://localhost:5000/api
     ```
 
 4.  **Install Dependencies:**
-    Open two terminal windows. In the first, install the frontend dependencies. In the second, install the backend dependencies.
+    This project has separate dependencies for the frontend and backend. Open two terminal windows to install them.
     ```bash
-    # Terminal 1: Root directory
+    # In your first terminal (project root):
     npm install
     ```
     ```bash
-    # Terminal 2: server/ directory
+    # In your second terminal (server directory):
     cd server
     npm install
     ```
 
 5.  **Run the Application:**
-    Start both the frontend and backend servers concurrently from their respective terminals.
+    You need to run both the frontend and backend servers concurrently in their respective terminals.
     ```bash
-    # Terminal 1: Root directory (starts the frontend)
+    # In your first terminal (project root):
     npm run dev
     ```
     ```bash
-    # Terminal 2: server/ directory (starts the backend)
+    # In your second terminal (server directory):
     npm run dev
     ```
 
@@ -96,17 +91,17 @@ Get a local copy of TradeTrack up and running for development and testing.
 
 📸 **Screenshots**
 
-Here's a glimpse of the TradeTrack platform.
+Here are some screenshots of the GuardianEye application in action.
 
-| Dashboard Overview | Trade Analysis |
+| Dashboard | Live View |
 | :---: | :---: |
 | <img src="public/assets/1.png" width="400"> | <img src="public/assets/2.png" width="400"> |
 
-| Community Forum | Leaderboard |
+| Recordings | Alerts |
 | :---: | :---: |
 | <img src="public/assets/3.png" width="400"> | <img src="public/assets/4.png" width="400"> |
 
-| Mobile Responsive | Dark Mode |
+| Mobile View | Settings |
 | :---: | :---: |
 | <img src="public/assets/5.png" width="400"> | <img src="public/assets/6.png" width="400"> |
 
@@ -114,27 +109,25 @@ Here's a glimpse of the TradeTrack platform.
 
 📅 **Roadmap**
 
-Our vision for TradeTrack is just getting started. Here's what we're planning:
-
-*   **MVP (Current):** Core trade journaling, community forum, and basic analytics.
-*   **Phase 2:** Advanced charting, real-time notifications (WebSockets), and more gamification elements.
-*   **Phase 3:** Brokerage integration for automated trade importing.
-*   **Phase 4:** Mobile app (React Native).
+*   **Q3 2024:** Finalize core features (Live View, Recordings, Alerts).
+*   **Q4 2024:** Implement advanced camera controls (PTZ - Pan, Tilt, Zoom).
+*   **Q1 2025:** Develop a mobile application with React Native.
+*   **Q2 2025:** Integrate with external services like cloud storage for recordings.
 
 ---
 
 🤝 **Contributing**
 
-Contributions are welcome! If you have ideas for new features or improvements, please open an issue to discuss it first. Pull requests are greatly appreciated.
+Contributions are welcome! Please open an issue to discuss any changes before submitting a pull request.
 
 1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+2.  Create your Feature Branch (`git checkout -b feature/NewFeature`)
+3.  Commit your Changes (`git commit -m 'Add some NewFeature'`)
+4.  Push to the Branch (`git push origin feature/NewFeature`)
 5.  Open a Pull Request
 
 ---
 
 📜 **License**
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the MIT License.
