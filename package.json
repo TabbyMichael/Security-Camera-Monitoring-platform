@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "vitest",
+    "test:backend": "npm test --prefix server"
   },
   "dependencies": {
     "axios": "^1.7.7",
@@ -42,6 +44,7 @@
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
     "jsdom": "^27.0.0",
+    "mongodb-memory-server": "^10.2.1",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "tsconfig-paths": "^4.2.0",
