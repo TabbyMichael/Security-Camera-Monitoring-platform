@@ -20,7 +20,11 @@ router.post('/', protect, async (req, res) => {
   try {
     const camera = await Camera.create(req.body);
     res.status(201).json(camera);
-  } catch (err) {
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map((val: any) => val.message);
+      return res.status(400).json({ message: messages[0] });
+    }
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
