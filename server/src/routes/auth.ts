@@ -32,7 +32,11 @@ router.post('/register', async (req, res) => {
       email: user.email,
       token,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((val: any) => val.message);
+      return res.status(400).json({ message: messages[0] }); // Return first error message
+    }
     console.error('Register error:', error);
     res.status(500).json({ message: 'Server error' });
   }

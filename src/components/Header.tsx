@@ -27,10 +27,11 @@ export function Header() {
             <button
               onClick={() => navigate('/notifications')}
               className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full"
+              aria-label="View notifications"
             >
               <Bell className="w-6 h-6" />
               {notifications > 0 && (
-                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" aria-hidden="true">
                   {notifications}
                 </span>
               )}
@@ -39,6 +40,7 @@ export function Header() {
             <button
               onClick={() => setIsAuthModalOpen(true)}
               className="p-2 text-gray-600 hover:bg-gray-100 rounded-full"
+              aria-label="Open user menu"
             >
               <User className="w-6 h-6" />
             </button>
